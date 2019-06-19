@@ -1,1 +1,0 @@
-delete from meteo_france_synop where numer_sta != 07650;
