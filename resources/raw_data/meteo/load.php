@@ -13,23 +13,21 @@ execute("TRUNCATE $tablename");
 // Import all the CSV files
 $files = glob('*.csv.gz');
 foreach($files as $file){
-	if( preg_match("/^synop\.201[0-8]+[0-9]{2}.csv.gz$/", $file) ){
-		// unzip the file
-		println("Extract $file...");
-		$file = ungz($file);
-		// recover full filepath
-		$path = str_replace("\\", "/", realpath($file));
-		// load file content in DB
-		println("Load $file...");
-		execute("LOAD DATA INFILE '$path' "
-				. "INTO TABLE $tablename "
-				. "FIELDS ENCLOSED BY '' TERMINATED BY ';' "
-				. "LINES TERMINATED BY '\n' "
-				. "IGNORE 1 LINES");
-		// remove extracted file
-		println("Remove $file...");
-		unlink($file);
-	}
+	// unzip the file
+	println("Extract $file...");
+	$file = ungz($file);
+	// recover full filepath
+	$path = str_replace("\\", "/", realpath($file));
+	// load file content in DB
+	println("Load $file...");
+	execute("LOAD DATA INFILE '$path' "
+			. "INTO TABLE $tablename "
+			. "FIELDS ENCLOSED BY '' TERMINATED BY ';' "
+			. "LINES TERMINATED BY '\n' "
+			. "IGNORE 1 LINES");
+	// remove extracted file
+	println("Remove $file...");
+	unlink($file);
 }
 
 // Remove unused lines
