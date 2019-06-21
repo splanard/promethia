@@ -12,7 +12,8 @@ Historique:
         Utilisation du morceau de code fourni en exemple du tuto, en injectant mes poids de départ, pour trouver la solution.
 19/06   Début de consolidation de l'input à fournir à l'AI pour Promethia, dans une base MySQL
         Script PHP pour charger automatiquement en base les données SYNOP de Météo France
+20/06	Fin de création du jeu de données
+21/06   Normalisation du jeu de données
 
 Prochaines étapes:
     - Enrichir l'exemple male/female avec un critère de plus pour tester la robustesse de l'impleméntation ?
-    - Terminer la construction du jeu de données
