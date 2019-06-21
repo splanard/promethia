@@ -41,7 +41,9 @@ class FullyConnectedNeuralNetwork {
 			exit("invalid training data provided");
 		}
 		
-		echo "Training begins (".date(DATE_RFC822).")".PHP_EOL;
+		$begin = time();
+		echo date(DATE_RFC822, $begin).PHP_EOL;
+		
 		for( $e=1; $e<=$epochs; $e++ ){
 			$y_preds = [];
 			foreach($data as $ii => $input){
@@ -89,9 +91,17 @@ class FullyConnectedNeuralNetwork {
 			// Calculate total loss
 			if( $e%10 == 0 ){
 				$loss = mse_loss($y_trues, $y_preds);
-				echo "Epoch $e loss: $loss (".date(DATE_RFC822).")" . PHP_EOL;
+				echo "Epoch $e loss: $loss" . PHP_EOL;
 			}
 		}
+		
+		// Traning report
+		echo "Training report:".PHP_EOL
+				."from: ".date(DATE_RFC822, $begin).PHP_EOL
+				."to: ".date(DATE_RFC822).PHP_EOL
+				."learning rate: $learn_rate".PHP_EOL
+				."epochs: $epochs".PHP_EOL
+				."final loss: $loss".PHP_EOL;
 	}
 	
 	/**

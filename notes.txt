@@ -2,7 +2,6 @@ But du projet:
 Comprendre les réseaux de neurones en en développant 1 "from scratch" en PHP.
 (PHP parce que j'ai la flemme d'apprendre le Python... pour le moment. Et que ça me forcera à comprendre les notions : je ne pourrai pas faire de copier-coller !)
 
-Historique du projet:
 [reprendre début: naissance de l'idée avec le concours inno Thales]
 14/06	Idée de la lutte contre les incendies
         Récupération des données incendies et météo. Début de mise en forme d'un jeu de données.
@@ -15,7 +14,9 @@ Historique du projet:
 20/06	Fin de création du jeu de données
 21/06   Normalisation du jeu de données
         Récupération des sources du projet my-first-neural-network
-        Premier apprentissage !
-
-Historique des résultats:
-- 21/06/2019 12:43:53 - HL(18), LR: 0.5, 5000e => IL: 0.107, FL: 0.077, 13:20:28
+        Premiers apprentissages
+- 21/06/2019 12:43:53 - HL(18), LR: 0.5, 5000e => 13:20:28 - IL: 0.107, FL: 0.077
+- 21/06/2019 14:30:00 - HL(18), LR: 1, 10000e => IL: 0.109, l'erreur se met à osciller à partir du cycle 1600... => LR trop élevé !
+- 21/06/2019 14:58:12 - HL(18), LR: 1, 1500e => 15:09:46 - IL: 0.1096, FL: 0.0872 (oscillation de l'erreur en fin d'entraînement)
+- 21/06/2019 15:13:20 - HL(18), LR: 1, 1000e => 15:20:50 - IL: 0.1096, FL: 0.0963 => export conf [1]
+- 21/06/2019 15:27:02 - [1], LR: 0.5, 1000e => XXX - IL: 0.0949, l'erreur oscille beaucoup, et très rapidement
