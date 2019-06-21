@@ -3,30 +3,22 @@ require_once 'FullyConnectedLayer.php';
 
 class FullyConnectedNeuralNetwork {
 	
-	/** @var array Hidden layers */
-	private $hidden = array();
+	/** @var FullyConnectedLayer[] Hidden layers */
+	private $hidden;
+	/** @var FullyConnectedLayer Output layers */
 	private $output;
 	
-	/**
-	 * Instanciate a full y connected neural network.
-	 * 
-	 * @param int $input The number of inputs.
-	 * @param array $hidden The number of neurons for each hidden layer. 
-	 * So the size of the array will be the number of hidden layers.
-	 * @param int $output The number of neurons for the output layer.
-	 */
-	function __construct( $input, array $hidden, $output ){
-		// Create hidden layers
-		$nb_hidden = count($hidden);
-		$neurons = array_merge( [$input], $hidden, [$output] );
-		for( $i=1; $i <= $nb_hidden; $i++ ){
-			$this->hidden[] = new FullyConnectedLayer($neurons[$i-1], $neurons[$i], $neurons[$i+1]);
-		}
-		
-		// Create output layer
-		$this->output = new FullyConnectedLayer($hidden[$nb_hidden-1], $output, 0);
+	function __construct(){
+		$this->hidden = array();
 	}
 	
+	/**
+	 * Provide the network with the inputs and collect the ouput, 
+	 * after is has passed through all the layers.
+	 * 
+	 * @param array $inputs network inputs
+	 * @return array network outputs
+	 */
 	public function feedforward( $inputs ){
 		$h = $inputs;
 		foreach($this->hidden as $hl){
@@ -36,8 +28,19 @@ class FullyConnectedNeuralNetwork {
 		return $o;
 	}
 	
+	/**
+	 * Train the network.
+	 * 
+	 * @param array $data The training dataset.
+	 * @param array $y_trues The correct outputs for the training dataset.
+	 * @param number $learn_rate The learning rate (0.1 by default).
+	 * @param int $epochs The number of times the network will pass through all the dataset.
+	 */
 	public function train( array $data, array $y_trues, $learn_rate = 0.1, $epochs = 1000 ){
-		// TODO: throw an error if count($data) != count($y_trues)
+		if( count($data) != count($y_trues) ){
+			exit("invalid training data provided");
+		}
+		
 		echo "Training begins (".date(DATE_RFC822).")".PHP_EOL;
 		for( $e=1; $e<=$epochs; $e++ ){
 			$y_preds = [];
@@ -89,5 +92,62 @@ class FullyConnectedNeuralNetwork {
 				echo "Epoch $e loss: $loss (".date(DATE_RFC822).")" . PHP_EOL;
 			}
 		}
+	}
+	
+	/**
+	 * Export network configuration.
+	 * @return string serialized configuration.
+	 */
+	public function exportConf(){
+		foreach($this->hidden as $hl){
+			$conf[] = $hl->exportConf();
+		}
+		$conf[] = $this->output->exportConf();
+		return serialize($conf);
+	}
+	
+	/**
+	 * Instanciate a fully connected neural network, from the given information.
+	 * 
+	 * @param int $input The number of inputs.
+	 * @param array $hidden The number of neurons for each hidden layer. 
+	 * So the size of the array will be the number of hidden layers.
+	 * @param int $output The number of neurons for the output layer.
+	 */
+	public static function create( $input, array $hidden, $output ){
+		$instance = new self();
+		
+		// Create hidden layers
+		$nb_hidden = count($hidden);
+		$neurons = array_merge( [$input], $hidden, [$output] );
+		for( $i=1; $i <= $nb_hidden; $i++ ){
+			$instance->hidden[] = FullyConnectedLayer::create($neurons[$i-1], $neurons[$i], $neurons[$i+1]);
+		}
+		
+		// Create output layer
+		$instance->output = FullyConnectedLayer::create($hidden[$nb_hidden-1], $output, 0);
+		
+		return $instance;
+	}
+	
+	/**
+	 * Instanciate a fully connected neural network from the given configuration.
+	 * 
+	 * @param array $conf The serialized configuration of the network.
+	 * @return FullyConnectedNeuralNetwork The network
+	 */
+	public static function fromConf( $conf ){
+		$c = unserialize( $conf );
+		$o_conf = array_pop( $c );
+		$hls_conf = $c;
+		
+		$instance = new self();
+		
+		foreach( $hls_conf as $hl ){
+			$instance->hidden[] = FullyConnectedLayer::fromConf( $hl );
+		}
+		$instance->output = FullyConnectedLayer::fromConf( $o_conf );
+		
+		return $instance;
 	}
 }

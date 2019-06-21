@@ -16,9 +16,11 @@ if( ($handle = fopen("resources/train_sample_norm.csv", "r")) !== FALSE ){
 }
 
 // Create the NN
-$network = new FullyConnectedNeuralNetwork(18, [18], 1);
+$network = FullyConnectedNeuralNetwork::create(18, [18], 1);
 
 // Train the NN
-$network->train($train['data'], $train['y_trues'], 0.5, 5000);
+$network->train($train['data'], $train['y_trues'], 1, 10000);
+$conf = $network->exportConf();
+echo( $conf ).PHP_EOL;
 
 // Test the NN
