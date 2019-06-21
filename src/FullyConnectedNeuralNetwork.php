@@ -46,8 +46,6 @@ class FullyConnectedNeuralNetwork {
 	private function feedAndBack( array $data, array $y_trues, $learn_rate ){
 		$y_preds = [];
 		foreach($data as $ii => $input){
-			//debug($this);
-
 			$y_true = $y_trues[$ii];
 
 			/* Array containing all the layers: the first being the first hidden, the last being the output layer */
@@ -172,6 +170,40 @@ class FullyConnectedNeuralNetwork {
 				."epochs: $e".PHP_EOL
 				."final learn rate: $learn_rate".PHP_EOL
 				."final loss: $loss".PHP_EOL;
+	}
+	
+	/**
+	 * Test the network with a test dataset.
+	 * 
+	 * @param array $data The test dataset.
+	 * @param array $y_trues The correct outputs for the test dataset.
+	 * @return number The loss.
+	 */
+	public function test( array $data, array $y_trues ){
+		if( count($data) != count($y_trues) ){
+			exit("invalid training data provided");
+		}
+		
+		foreach($data as $ii => $input){
+			$y_true = $y_trues[$ii];
+
+			/* Array containing all the layers: the first being the first hidden, the last being the output layer */
+			/* @var $layers FullyConnectedLayer[] */
+			$layers = array_merge( $this->hidden, [$this->output] );
+			$n = count($layers);
+
+			// Feed forward and keep track of the ouputs of each layer
+			$outs = [];
+			for( $i=0; $i<$n; $i++ ){
+				$x = $i==0 ? $input : $outs[$i-1];
+				$outs[] = $layers[$i]->feedforward( $x );
+			}
+			$y_pred = $outs[$n-1][0];
+			//echo "y_pred: $y_pred".PHP_EOL;
+			$y_preds[] = $y_pred;
+		}
+		
+		return mse_loss($y_trues, $y_preds);
 	}
 	
 	/**
