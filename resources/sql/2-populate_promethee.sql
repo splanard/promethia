@@ -1,0 +1,2 @@
+-- fire_starts & fire_surface
+update sample s set s.fire_starts = (select count(surface) from promethee where cast(alerte as date) = s.date), s.fire_surface = (select sum(surface) from promethee where cast(alerte as date) = s.date)
