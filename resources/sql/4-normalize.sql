@@ -1,6 +1,6 @@
 -- Create table for normalized sample
-DROP TABLE IF EXISTS `sample_norm`;
-CREATE TABLE `sample_norm` (
+DROP TABLE IF EXISTS `sample_n`;
+CREATE TABLE `sample_n` (
   `month` decimal(6,5),
   `day` decimal(6,5),
   `weekday` decimal(6,5),
@@ -23,7 +23,7 @@ CREATE TABLE `sample_norm` (
   `fire` int(1)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- MinMax normalization
+-- MinMax-ish normalization
 SET @min_t = (select min(t_min) from sample);
 SET @max_t = (select max(t_max) from sample);
 SET @min_wind = (select min(wind_min) from sample);
@@ -32,7 +32,7 @@ SET @max_rain = (select max(rain) from sample);
 SET @max_rain_14d = (select max(rain_14d) from sample);
 SET @max_rain_1m = (select max(rain_1m) from sample);
 SET @max_rain_6m = (select max(rain_6m) from sample);
-INSERT INTO sample_norm (
+INSERT INTO sample_n (
     SELECT cast((month-1)/11 as decimal(6,5)) as month_n
         , cast((day-1)/30 as decimal(6,5)) as day_n
         , cast(weekday/6 as decimal(6,5)) as weekday_n
