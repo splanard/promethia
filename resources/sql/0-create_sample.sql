@@ -1,0 +1,26 @@
+DROP TABLE IF EXISTS `sample`;
+CREATE TABLE `sample` (
+  `date` date PRIMARY KEY NOT NULL,
+  `month` int(2) DEFAULT NULL COMMENT 'month number, from 1 to 12',
+  `day` int(2) DEFAULT NULL COMMENT 'day number, from 1 to 31',
+  `weekday` int(1) DEFAULT NULL COMMENT 'day of the week (0=monday, 6=sunday)',
+  `t_min` decimal(5,2) DEFAULT NULL COMMENT 'min temperature of the day (K)',
+  `t_max` decimal(5,2) DEFAULT NULL COMMENT 'max temperature of the day (K)',
+  `t_min_7d` decimal(5,2) DEFAULT NULL COMMENT 'average min temperature during the past 7 days (K)',
+  `t_max_7d` decimal(5,2) DEFAULT NULL COMMENT 'average max temperature during the past 7 days (K)',
+  `wind_min` decimal(3,1) DEFAULT NULL COMMENT 'min wind force of the day (m/s)',
+  `wind_max` decimal(3,1) DEFAULT NULL COMMENT 'max wind force of the day (m/s)',
+  `wind_min_7d` decimal(3,1) DEFAULT NULL COMMENT 'average min wind force during the past 7 days (m/s)',
+  `wind_max_7d` decimal(3,1) DEFAULT NULL COMMENT 'average max wind force during the past 7 days (m/s)',
+  `gust_wind_min` decimal(3,1) DEFAULT NULL COMMENT 'min wind gust force of the day (m/s)',
+  `gust_wind_max` decimal(3,1) DEFAULT NULL COMMENT 'max wind gust force of the day (m/s)',
+  `hu_min` int(3) DEFAULT NULL COMMENT 'min humidity (%)',
+  `hu_max` int(3) DEFAULT NULL COMMENT 'max humidity (%)',
+  `rain` decimal(4,1) DEFAULT NULL COMMENT 'rainfall of the day (mm)',
+  `rain_14d` decimal(5,1) DEFAULT NULL COMMENT 'rainfall of the last 2 weeks (mm)',
+  `rain_1m` decimal(5,1) DEFAULT NULL COMMENT 'rainfall of the last month (mm)',
+  `rain_6m` decimal(5,1) DEFAULT NULL COMMENT 'rainfall of the last 6 months (mm)',
+  `fire` int(1) DEFAULT '0' COMMENT 'was there a fire? (0/1)',
+  `fire_starts` int(8) DEFAULT '0' COMMENT 'number of fire starts',
+  `fire_surface` int(11) DEFAULT '0' COMMENT 'total surface of ground burnt (sq. meters)'
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
