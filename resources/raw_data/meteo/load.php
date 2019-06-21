@@ -34,6 +34,10 @@ foreach($files as $file){
 println("Remove unused lines...");
 execute("DELETE FROM $tablename WHERE numer_sta != $meteo_station");
 
+// Correct rainfall data
+println("Correct negative rainfall data...");
+execute("UPDATE $tablename set rr3 = '0.000000' where rr3 != 'mq' and rr3 < 0");
+
 function execute( $query ){
 	global $db;
 	if( $db->query( $query ) === false ){
