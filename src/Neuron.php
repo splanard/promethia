@@ -20,6 +20,9 @@ class Neuron {
 	 * @return number output
 	 */
 	public function feedforward( array $inputs ){
+		if( count($inputs) != count($this->weights) ){
+			exit("invalid input given to neuron: ".var_export($inputs, true));
+		}
 		return sigmoid( $this->sum($inputs) );
 	}
 	
