@@ -2,7 +2,7 @@ But du projet:
 Comprendre les réseaux de neurones en en développant 1 "from scratch" en PHP.
 (PHP parce que j'ai la flemme d'apprendre le Python... pour le moment. Et que ça me forcera à comprendre les notions : je ne pourrai pas faire de copier-coller !)
 
-Historique:
+Historique du projet:
 [reprendre début: naissance de l'idée avec le concours inno Thales]
 14/06	Idée de la lutte contre les incendies
         Récupération des données incendies et météo. Début de mise en forme d'un jeu de données.
@@ -14,6 +14,8 @@ Historique:
         Script PHP pour charger automatiquement en base les données SYNOP de Météo France
 20/06	Fin de création du jeu de données
 21/06   Normalisation du jeu de données
+        Récupération des sources du projet my-first-neural-network
+        Premier apprentissage !
 
-Prochaines étapes:
-    - Enrichir l'exemple male/female avec un critère de plus pour tester la robustesse de l'impleméntation ?
+Historique des résultats:
+- 21/06/2019 12:43:53 - HL(18), LR: 0.5, 5000e => IL: 0.107, FL: 0.077, 13:20:28
