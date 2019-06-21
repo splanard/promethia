@@ -37,4 +37,4 @@ update sample u inner join (select s.date, (select sum(rain) from sample where d
 update sample u inner join (select s.date, (select sum(rain) from sample where date between date_sub(s.date, interval 1 month) and date_sub(s.date, interval 1 day) ) as r1m from sample s where exists (select 1 from sample e where e.date = date_sub(s.date, interval 1 month))) x on x.date = u.date set u.rain_1m = x.r1m;
 
 -- rain_6m
-update sample u inner join (select s.date, (select sum(rain) from sample where date between date_sub(s.date, interval 1 month) and date_sub(s.date, interval 6 day) ) as r6m from sample s where exists (select 1 from sample e where e.date = date_sub(s.date, interval 6 month))) x on x.date = u.date set u.rain_6m = x.r6m;
+update sample u inner join (select s.date, (select sum(rain) from sample where date between date_sub(s.date, interval 6 month) and date_sub(s.date, interval 1 day) ) as r6m from sample s where exists (select 1 from sample e where e.date = date_sub(s.date, interval 6 month))) x on x.date = u.date set u.rain_6m = x.r6m;
