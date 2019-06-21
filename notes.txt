@@ -15,8 +15,12 @@ Comprendre les réseaux de neurones en en développant 1 "from scratch" en PHP.
 21/06   Normalisation du jeu de données
         Récupération des sources du projet my-first-neural-network
         Premiers apprentissages
-- 21/06/2019 12:43:53 - HL(18), LR: 0.5, 5000e => 13:20:28 - IL: 0.107, FL: 0.077
-- 21/06/2019 14:30:00 - HL(18), LR: 1, 10000e => IL: 0.109, l'erreur se met à osciller à partir du cycle 1600... => LR trop élevé !
-- 21/06/2019 14:58:12 - HL(18), LR: 1, 1500e => 15:09:46 - IL: 0.1096, FL: 0.0872 (oscillation de l'erreur en fin d'entraînement)
-- 21/06/2019 15:13:20 - HL(18), LR: 1, 1000e => 15:20:50 - IL: 0.1096, FL: 0.0963 => export conf [1]
-- 21/06/2019 15:27:02 - [1], LR: 0.5, 1000e => XXX - IL: 0.0949, l'erreur oscille beaucoup, et très rapidement
+- 21/06/2019 12:43:53 - HL(18), sigmoid, LR: 0.5, 5000e => 13:20:28 - IL: 0.107, FL: 0.077
+- 21/06/2019 14:30:00 - HL(18), sigmoid, LR: 1, 10000e => IL: 0.109, l'erreur se met à osciller à partir du cycle 1600... => LR trop élevé !
+- 21/06/2019 14:58:12 - HL(18), sigmoid, LR: 1, 1500e => 15:09:46 - IL: 0.1096, FL: 0.0872 (oscillation de l'erreur en fin d'entraînement)
+- 21/06/2019 15:13:20 - HL(18), sigmoid, LR: 1, 1000e => 15:20:50 - IL: 0.1096, FL: 0.0963 
+=> export conf [1]
+- 21/06/2019 15:27:02 - [1], sigmoid, LR: 0.5, 1000e => IL: 0.0949, l'erreur oscille beaucoup et très rapidement
+        Implémentation d'un mode d'entraînement automatique (mise à jour du LR lorsque la perte oscille)
+- 21/06/2019 15:56:51 - HL(18), sigmoid, LR: auto => 16:56:52 - 7880e, IL: 0.1093, FL: 0.0747, FLR: 0.125
+=> export conf [2]

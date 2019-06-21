@@ -16,10 +16,11 @@ if( ($handle = fopen("resources/train_sample_norm.csv", "r")) !== FALSE ){
 }
 
 // Create the NN
-//$network = FullyConnectedNeuralNetwork::create(18, [18], 1);
-$network = FullyConnectedNeuralNetwork::fromConf(file_get_contents("resources/conf/conf[1].txt"));
+$network = FullyConnectedNeuralNetwork::create(18, [18], 1);
+//$network = FullyConnectedNeuralNetwork::fromConf(file_get_contents("resources/conf/conf[1].txt"));
 
 // Train the NN
-$network->train($train['data'], $train['y_trues'], 0.5, 1000);
+//$network->train($train['data'], $train['y_trues'], 0.5, 1000);
+$network->autoTrain($train['data'], $train['y_trues']);
 $conf = $network->exportConf();
 file_put_contents("export.txt", $conf);
