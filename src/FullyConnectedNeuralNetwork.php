@@ -30,7 +30,20 @@ class FullyConnectedNeuralNetwork {
 			$h = $hl->feedforward( $h );
 		}
 		$o = $this->output->feedforward( $h );
-		return $o;
+		return $o[0]; // WARNING: this only works when there is only 1 output !
+	}
+	
+	/**
+	 * Feed the network with every inputs in the provided dataset.
+	 * 
+	 * @param array $data Collection of inputs
+	 * @return array Collection of outputs
+	 */
+	public function feedforwardAll( array $data ){
+		foreach( $data as $inputs ){
+			$y_preds[] = $this->feedforward( $inputs );
+		}
+		return $y_preds;
 	}
 	
 	/**
@@ -59,12 +72,10 @@ class FullyConnectedNeuralNetwork {
 				$x = $i==0 ? $input : $outs[$i-1];
 				$outs[] = $layers[$i]->feedforward( $x );
 			}
-			$y_pred = $outs[$n-1][0];
-			//echo "y_pred: $y_pred".PHP_EOL;
+			$y_pred = $outs[$n-1][0]; // WARNING: this only works when there is only 1 output !
 			$y_preds[] = $y_pred;
 
-			$dL_dypred = -2 * ($y_true - $y_pred);
-			//echo "dL_dypred: $dL_dypred".PHP_EOL;
+			$dL_dypred = $this->loss_deriv_one( $y_true, $y_pred );
 
 			// Initialize dL_dout with dL_dypred at the end
 			$dL_dout = array_fill( 0, $n, array() );
@@ -103,12 +114,16 @@ class FullyConnectedNeuralNetwork {
 		$begin = time();
 		echo date(DATE_RFC822, $begin).PHP_EOL;
 		
+		// initial loss
+		$initial_loss = $this->loss($y_trues, $this->feedforwardAll( $data ));
+		
+		// train
 		for( $e=1; $e<=$epochs; $e++ ){
 			$y_preds = $this->feedAndBack($data, $y_trues, $learn_rate);
 			
 			// Calculate total loss
 			if( $e%10 == 0 ){
-				$loss = mse_loss($y_trues, $y_preds);
+				$loss = $this->loss($y_trues, $y_preds);
 				echo "Epoch $e loss: $loss" . PHP_EOL;
 			}
 		}
@@ -119,6 +134,7 @@ class FullyConnectedNeuralNetwork {
 				."to: ".date(DATE_RFC822).PHP_EOL
 				."learn rate: $learn_rate".PHP_EOL
 				."epochs: $epochs".PHP_EOL
+				."initial loss: $initial_loss".PHP_EOL
 				."final loss: $loss".PHP_EOL;
 	}
 	
@@ -131,27 +147,31 @@ class FullyConnectedNeuralNetwork {
 	 * @param string $time_str The time during which the network must train.
 	 * This value will be passed to strtotime() function to evaluate the duration 
 	 * of the training in seconds.
+	 * @param number $init_learn_rate Initial learn rate.
 	 */
-	public function autoTrain( array $data, array $y_trues, $time_str = '1 hour' ){
+	public function autoTrain( array $data, array $y_trues, $time_str = '1 hour', $init_learn_rate = 1 ){
 		if( count($data) != count($y_trues) ){
 			exit("invalid training data provided");
 		}
 		
 		$begin = time();
 		echo date(DATE_RFC822, $begin).PHP_EOL;
-		$train_time = strtotime( $time_str, 0 );
+		$training_time = strtotime( $time_str, 0 );
+		
+		// initial loss
+		$initial_loss = $this->loss($y_trues, $this->feedforwardAll( $data ));
 		
 		$e=0;
 		$oscillations=0;
-		$learn_rate=1;
+		$learn_rate=$init_learn_rate;
 		$prev_loss = 1;
-		while( time()-$begin <= $train_time ){
+		while( time()-$begin <= $training_time ){
 			$e++;
 			$y_preds = $this->feedAndBack($data, $y_trues, $learn_rate);
 			
 			// Every x epochs, update the learning rate if necessary
 			if( $e%self::AUTO_TRAIN_LOSS_EVAL_FREQUENCY == 0 ){
-				$loss = mse_loss($y_trues, $y_preds);
+				$loss = $this->loss($y_trues, $y_preds);
 				echo "Epoch $e: LR $learn_rate, loss $loss" . PHP_EOL;
 				
 				if( $loss > $prev_loss && ++$oscillations >= self::AUTO_TRAIN_MAX_OSCILLATIONS ){
@@ -168,8 +188,10 @@ class FullyConnectedNeuralNetwork {
 				."from: ".date(DATE_RFC822, $begin).PHP_EOL
 				."to: ".date(DATE_RFC822).PHP_EOL
 				."epochs: $e".PHP_EOL
-				."final learn rate: $learn_rate".PHP_EOL
-				."final loss: $loss".PHP_EOL;
+				."initial loss: $initial_loss".PHP_EOL
+				."initial learn rate: $init_learn_rate".PHP_EOL
+				."final loss: $loss".PHP_EOL
+				."final learn rate: $learn_rate".PHP_EOL;
 	}
 	
 	/**
@@ -181,29 +203,12 @@ class FullyConnectedNeuralNetwork {
 	 */
 	public function test( array $data, array $y_trues ){
 		if( count($data) != count($y_trues) ){
-			exit("invalid training data provided");
+			exit("invalid test data provided");
 		}
+		$y_preds = $this->feedforwardAll( $data );
 		
-		foreach($data as $ii => $input){
-			$y_true = $y_trues[$ii];
-
-			/* Array containing all the layers: the first being the first hidden, the last being the output layer */
-			/* @var $layers FullyConnectedLayer[] */
-			$layers = array_merge( $this->hidden, [$this->output] );
-			$n = count($layers);
-
-			// Feed forward and keep track of the ouputs of each layer
-			$outs = [];
-			for( $i=0; $i<$n; $i++ ){
-				$x = $i==0 ? $input : $outs[$i-1];
-				$outs[] = $layers[$i]->feedforward( $x );
-			}
-			$y_pred = $outs[$n-1][0];
-			//echo "y_pred: $y_pred".PHP_EOL;
-			$y_preds[] = $y_pred;
-		}
-		
-		return mse_loss($y_trues, $y_preds);
+		echo "loss on test dataset: " . $this->loss($y_trues, $y_preds).PHP_EOL;
+		echo "false neg loss on test dataset: " . false_neg_loss($y_trues, $y_preds).PHP_EOL;
 	}
 	
 	/**
@@ -216,6 +221,13 @@ class FullyConnectedNeuralNetwork {
 		}
 		$conf[] = $this->output->exportConf();
 		return serialize($conf);
+	}
+	
+	private function loss( array $y_trues, array $y_preds ){
+		return mse_loss($y_preds, $y_trues);
+	}
+	private function loss_deriv_one( $y_true, $y_pred ){
+		return mse_loss_deriv_one( $y_true, $y_pred );
 	}
 	
 	/**

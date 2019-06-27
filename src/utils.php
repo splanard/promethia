@@ -21,9 +21,28 @@ function dotp( array $a, array $b ){
 /**
  * Calculates the mean square error (MSE) loss
  */
-function mse_loss( array $y_true, array $y_out ){
-	// TODO: throw an error if count($y_true) != count($y_out)
-	return mean(array_map(function($a, $b){ return pow($a - $b, 2); }, $y_true, $y_out ));
+function mse_loss( array $y_trues, array $y_preds ){
+	if( count($y_trues) != count($y_preds) ){
+		exit("Invalid arrys passed to mse_loss()");
+	}
+	return mean(array_map(function($a, $b){ return pow($a - $b, 2); }, $y_trues, $y_preds ));
+}
+
+/**
+ * Calculates the derivative of the MSE loss of one couple y_true/y_pred.
+ */
+function mse_loss_deriv_one( $y_true, $y_pred ){
+	return -2 * ($y_true - $y_pred);
+}
+
+function mse_loss_alt( array $y_trues, array $y_preds ){
+	return mean(array_map(function($a, $b){ return (1 + 3*$a) * pow($a - $b, 2); }, $y_trues, $y_preds ));
+}
+function mse_loss_alt_deriv_one( $y_true, $y_pred ){
+	return (1 + 3*$y_true) * -2 * ($y_true - $y_pred);
+}
+function false_neg_loss( array $y_trues, array $y_preds ){
+	return mean(array_map(function($a, $b){ return pow($a - $b, 2) * $a; }, $y_trues, $y_preds ));
 }
 
 function normalize_minmax( array $input, $newmin = 0, $newmax = 1 ){
