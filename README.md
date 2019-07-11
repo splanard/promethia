@@ -1,4 +1,4 @@
-# Projet Promethia
+# Projet PromethIA
 
 Le but initial de ce projet était d'apprendre le fonctionnement d'un réseau de neurones en le développant entièrement en PHP.
 Mais pour qu'un projet de ce type porte ses fruits, il faut être confronté à des problématiques réelles. Il faut donc un sujet d'application concrète.
@@ -33,7 +33,7 @@ Lors de mes recherches, je découvre également les concepts suivants :
 
 Concepts qui collent pas mal au sujet du concours ! Qui collent tellement, que je finis par trouver beaucoup d'implémentations toutes faites, avec Tensorflow ou Keras, de ces architectures de réseaux de neurones...
 
-Le résultat de mes recherches correspond finalement **trop** au sujet du concours, qui va se résumer à refaire quelque chose qui existe déjà. Je vais donc être très tenté de m'inspirer de l'existant. Mais est-ce que cela m'apportera réellement une meilleure connaissance de ce qu'est un réseau de neurones ? Pas forcément... D'autant plus que les concepts manipulés dans une implémentation de SRGAN dépasse de loin mes connaissances actuelles en la matière.
+Le résultat de mes recherches correspond finalement **trop** au sujet du concours, qui va se résumer à refaire quelque chose qui existe déjà. Je vais donc être très tenté de m'inspirer de l'existant. Mais est-ce que cela m'apportera réellement une meilleure connaissance de ce qu'est un réseau de neurones ? Pas forcément... D'autant plus que les concepts manipulés dans une implémentation de SRGAN dépassent de loin mes connaissances actuelles en la matière.
 
 Je décide donc de ne pas participer à ce concours, mais de transformer le sujet en veille perso : je vais coder, _from scratch_, un réseau de neurones.
 
@@ -76,21 +76,21 @@ Après consultation du contenu de ces données météo et un moment de réfléxi
 
 - le mois de l'année (1-12)
 - le jour (1-31)
-- le jour de la semaine (lundi-dimanche)
+- le jour de la semaine (lundi-dimanche) (_peut-être que les pyromanes ont leur jour de prédilection, qui sait !_)
 - la température minimale sur la journée
 - la température maximale sur la journée
-- la température minimale moyenne sur les 7 jours précédents (de façon tout à fait arbitraire)
-- la température maximale moyenne sur les 7 jours précédents (de façon tout à fait arbitraire)
+- la température minimale moyenne sur les 7 jours précédents _(de façon tout à fait arbitraire)_
+- la température maximale moyenne sur les 7 jours précédents _(de façon tout à fait arbitraire)_
 - la vitesse du vent minimale sur la journée
 - la vitesse du vent maximale sur la journée
-- la vitesse du vent minimale moyenne sur les 7 jours précédents (de façon tout à fait arbitraire)
-- la vitesse du vent maximale moyenne sur les 7 jours précédents (de façon tout à fait arbitraire)
+- la vitesse du vent minimale moyenne sur les 7 jours précédents _(de façon tout à fait arbitraire)_
+- la vitesse du vent maximale moyenne sur les 7 jours précédents _(de façon tout à fait arbitraire)_
 - la vitesse minimale du vent en rafales sur la journée  
 - la vitesse maximale du vent en rafales sur la journée
 - l'humidité minimale sur la journée (%)
 - l'humidité maximale sur la journée (%)
 - les précipitations de la journée (mm)
-- les précipitations des 14 jours précédents (de façon tout à fait arbitraire) 
+- les précipitations des 14 jours précédents _(de façon tout à fait arbitraire)_
 - les précipitations du mois précédent
 - les précipitations des 6 mois précédents
 - y a-t-il eu un feu ce jour-là ?
@@ -102,22 +102,34 @@ J'utilise MySQL pour :
 - Charger les données brutes issues de Prométhée et de MétéoFrance. J'ai d'ailleurs développé des [scripts PHP](./resources/raw_data/meteo) pour charger ces dernières, qui ne sont disponibles que mois par mois.
 - Constituer un jeu de données en croisant les deux et le normaliser pour pouvoir le passer au réseau de neurones : [voir les scripts dédiés](./resources/sql).
 
-J'exporte ensuite mon jeu de données normalisé en CSV. Mon jeu de données d'entraînement sera constitué des données de 2010 à 2017. Les données de 2018 constitueront mon jeu de données de test.
+Le 21 juin, la première version du jeu de données normalisé est prête : je l'exporte en CSV. Mon jeu de données d'entraînement sera constitué des données de 2010 à 2017. Les données de 2018 constitueront mon jeu de données de test. 
+
 
 ### Implémentation et résultats
 
 To Continue...
 
+
 ## Fonctionnement
 
 ### Pré-requis
 
-TODO
+Avoir PHP 7 installé et disponible dans le `PATH`.
 
 ### Installation
 
-TODO
+Simplement récupérer les sources du projet.
 
 ### Utilisation
 
-TODO
+Avec une invite de commandes, se placer dans le répertoire des sources du projet.
+
+Pour initialiser un réseau de neurones :
+
+    php init.php 19 19
+
+Les jeux de données présents dans les sources possèdent 19 valeurs d'entrée.
+
+Pour entraîner le réseau de neurones, utiliser :
+
+    php train.php help
