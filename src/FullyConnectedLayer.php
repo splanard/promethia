@@ -88,10 +88,8 @@ class FullyConnectedLayer {
 	public static function create( $nb_in, $nb_neurons, $nb_out ){
 		$instance = new self();
 		for( $i=0, $maxi=$nb_neurons; $i<$maxi; $i++ ){
-			$weights = xavier_init($nb_in, $nb_in, $nb_out);
-			//$bias = stats_rand_gen_normal(0, 1);
-			//Use of mt_rand() because stats_rand_gen_normal() always returns the same values...
-			$bias = mt_rand(-1.5, 1.5);
+			$weights = xavier_init($nb_in, $nb_in, $nb_out, 'nrand');
+			$bias = nrand(0,1);
 			$instance->neurons[] = new Neuron( $weights, $bias );
 		}
 		return $instance;
