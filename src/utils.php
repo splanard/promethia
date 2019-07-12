@@ -21,9 +21,27 @@ function dotp( array $a, array $b ){
 /**
  * Calculates the mean square error (MSE) loss
  */
-function mse_loss( array $y_true, array $y_out ){
-	// TODO: throw an error if count($y_true) != count($y_out)
-	return mean(array_map(function($a, $b){ return pow($a - $b, 2); }, $y_true, $y_out ));
+function mse_loss( array $y_trues, array $y_preds ){
+	if( count($y_trues) != count($y_preds) ){
+		exit("Invalid arrys passed to mse_loss()");
+	}
+	return mean(array_map(function($a, $b){ return pow($a - $b, 2); }, $y_trues, $y_preds ));
+}
+
+/**
+ * Calculates the derivative of the MSE loss of one couple y_true/y_pred.
+ */
+function mse_loss_deriv_one( $y_true, $y_pred ){
+	return -2 * ($y_true - $y_pred);
+}
+
+function mse_loss_alt( array $y_trues, array $y_preds ){
+	//return mean(array_map(function($a, $b){ return (1 + 9*$a) * pow($a - $b, 2); }, $y_trues, $y_preds ));
+	return mean(array_map(function($a, $b){ return pow($a - $b, 2) / (10 - 9*$a); }, $y_trues, $y_preds ));
+}
+function mse_loss_alt_deriv_one( $y_true, $y_pred ){
+	//return (1 + 9*$y_true) * -2 * ($y_true - $y_pred);
+	return -2 * ($y_true - $y_pred) / (10 - 9*$y_true);
 }
 
 function normalize_minmax( array $input, $newmin = 0, $newmax = 1 ){
@@ -57,12 +75,57 @@ function deriv_sigmoid( $x ){
  * @param int $nw Number of weights to initialize
  * @param int $ni Number of inputs for the layer
  * @param int $no Number of outputs for the layer
+ * $param callback $rand_function the random generation function to use
  */
-function xavier_init( $nw, $ni, $no ){
+function xavier_init( $nw, $ni, $no, $rand_function = 'nrand' ){
 	for( $i=0, $maxi=$nw; $i<$maxi; $i++ ){
-		//$weights[] = stats_rand_gen_normal(0, 1) * sqrt(1/($ni+$no));
-		// Use of mt_rand() because stats_rand_gen_normal() always returns the same values...
-		$weights[] = mt_rand(-1.5, 1.5) * sqrt(1/($ni+$no));
+		$weights[] = $rand_function(0,1) * sqrt(1/($ni+$no));
 	}
 	return $weights;
+}
+
+/**
+ * Simulate a random number which probability of occurence follow a standard 
+ * normal distribution of given mean and variance.
+ * 
+ * @param number $mean The mean or expectation
+ * @param number $sd The standard deviation or variance
+ * @return A random number following the normal distribution
+ */
+function nrand($mean, $sd){
+    $x = mt_rand()/mt_getrandmax();
+    $y = mt_rand()/mt_getrandmax();
+    return sqrt(-2*log($x))*cos(2*pi()*$y)*$sd + $mean;
+}
+
+/**
+ * Read a CSV dataset.
+ * 
+ * @param string $path The path of the dataset to read
+ * @param integer $shift_cols The number of columns to ignore at the beginning of each line
+ * @param integer $pop_cols The number of columns to ignore at the end of each line
+ * @return array CSV dataset converted in array. The last non-ignored element of 
+ * each line is considered as the y_true value. the rest of the line is the training data.
+ */
+function read_dataset( $path, $shift_cols = 0, $pop_cols = 0 ){
+	$set = [
+		'data' => [],
+		'y_trues' => []
+	];
+	if( ($handle = fopen($path, "r")) !== FALSE ){
+		while( ($data = fgetcsv($handle, 200, ",")) !== FALSE ){
+			$shift = $shift_cols;
+			while( $shift-- > 0){
+				array_shift($data);
+			}
+			$pop = $pop_cols;
+			while( $pop-- > 0 ){
+				array_pop($data);
+			}
+			$set['y_trues'][] = array_pop( $data );
+			$set['data'][] = $data;
+		}
+		fclose($handle);
+	}
+	return $set;
 }

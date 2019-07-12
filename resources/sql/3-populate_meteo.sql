@@ -28,7 +28,7 @@ update sample s inner join (select cast(`date` as date) as dt, min(cast(rafper a
 update sample s inner join (select cast(`date` as date) as dt, min(cast(u as int)) as umin, max(cast(u as int)) as umax from meteo_france_synop group by cast(`date` as date)) x set s.hu_min = x.umin, s.hu_max = x.umax where s.date = x.dt;
 
 -- rain
-update sample s inner join ( select date(date_sub(cast(`date` as datetime), interval 1 hour)) as dt, sum(cast(rr3 as decimal(4,1))) as r from meteo_france_synop group by date(date_sub(cast(`date` as datetime), interval 1 hour)) ) x on x.dt = s.date set s.rain = x.r;
+update sample s inner join ( select date(date_sub(cast(`date` as datetime), interval 1 hour)) as dt, sum(cast(rr3 as decimal(4,1))) as r from meteo_france_synop where rr3 != 'mq' group by date(date_sub(cast(`date` as datetime), interval 1 hour)) ) x on x.dt = s.date set s.rain = x.r
 
 -- rain_14d
 update sample u inner join (select s.date, (select sum(rain) from sample where date between date_sub(s.date, interval 14 day) and date_sub(s.date, interval 1 day) ) as r14 from sample s where exists (select 1 from sample e where e.date = date_sub(s.date, interval 14 day))) x on x.date = u.date set u.rain_14d = x.r14;

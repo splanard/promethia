@@ -19,10 +19,34 @@ Comprendre les réseaux de neurones en en développant 1 "from scratch" en PHP.
             - 21/06/2019 14:30:00 - HL(18), sigmoid, LR: 1, 10000e => IL: 0.109, l'erreur se met à osciller à partir du cycle 1600... => LR trop élevé !
             - 21/06/2019 14:58:12 - HL(18), sigmoid, LR: 1, 1500e => 15:09:46 - IL: 0.1096, FL: 0.0872 (oscillation de l'erreur en fin d'entraînement)
             - 21/06/2019 15:13:20 - HL(18), sigmoid, LR: 1, 1000e => 15:20:50 - IL: 0.1096, FL: 0.0963 
-            => export conf [1]
+                => export conf [1]
             - 21/06/2019 15:27:02 - [1], sigmoid, LR: 0.5, 1000e => IL: 0.0949, l'erreur oscille beaucoup et très rapidement
         Implémentation d'un mode d'entraînement automatique (mise à jour du LR lorsque la perte oscille)
             - 21/06/2019 15:56:51 - HL(18), sigmoid, LR: auto => 16:56:52 - 7880e, IL: 0.1093, FL: 0.0747, FLR: 0.125
-            => export conf [2]
+                => export conf [2]
         Validation du réseau sur le plus gros feu de 2018 et sur l'ensemble de l'échantillon 2018
             => pas concluant : 81.7% d'incendie pour le plus gros de 2018, 17% d'erreur sur l'ensemble du jeu de test...
+        Correction de l'échantillonnage
+24/06   Fonction "loss" alternative, augmentant l'erreur sur les incendies réels
+            - 10:09:37 - HL(19), sigmoid, mse_loss_alt, LR: auto => 11:09:38 - 7022e, IL: 0.1860, FL: 0.1214, FLR: 0.0625
+                => export conf[3]
+                Test plus gros incendie 2018: 85.3%, test 2018: 22.9% d'erreur.
+                Toujours pas fantastique...
+            - 11:28:09 - conf[3], LR: auto(0.0625) => 12:28:10 - 7423e, IL: 0.1214, FL: 0.1124, FLR: 0.0625
+                BG2018: 89.8%, 2018: 24.1% d'erreur / 0.0617 false neg loss
+                => update conf[3]
+            - 14:01:52 - conf[3], LR: auto(0.0625) => 15:01:53 - 7263e, IL: 0.1124, FL: 0.1074, FLR: 0.03125
+                BG2018: 88%, 2018: 0.064 false neg loss
+                => pas tellement de progrès...
+            - 18:09:40 - HL(19), sigmoid, mse_loss_alt(2), LR: auto(0.5) => 21:47:31 - 4946e, IL: 0.2455, FL: 0.1699, FLR: 0.0625
+                BG2018: 85.7%, 2018: 0.0555 false neg loss
+25/06   Nouveaux essais de customisation de la formule de perte
+            - 09:33:10 - HL(19), sigmoid, mse_loss_alt(3), LR: auto(0.5) => 11:33:11 - 14283e, IL: 0.4613; FL: 0.29; FLR: 0.015625
+                BG2018: 99.9% !!! 2018: 0.4311 loss, 0.0689 false neg loss
+                => export conf[4]
+11/07   Function de substitution pour générer une valeur aléatoire selon une distribution normale
+            - 11:25:27 - HL(19), sigmoid, mse_loss_alt(3), LR: auto (0.5) => 13:46:49 - 6650e, IL: 0.4339, FL: 0.3491, FLR: 0.03125
+        Crétion des commandes init.php et train.php pour manipuler le réseau de neurones via CLI
+        Utilisation de feedForwardAll pour calculer et afficher la perte au lieu de se baser sur les données biaisées de feedAndBack
+12/07   Modification de la fonction de perte alternative pour diminuer l'impact des faux positifs au lieu d'augmenter celui des faux négatifs
+        
