@@ -2,6 +2,7 @@
 DROP TABLE IF EXISTS `sample_n`;
 CREATE TABLE `sample_n` (
     `date` date PRIMARY KEY NOT NULL,
+    `surface_burnt` int(11),
     `month` decimal(6,5),
     `day` decimal(6,5),
     `weekday` decimal(6,5),
@@ -35,6 +36,7 @@ SET @max_rain_1m = (select max(rain_1m) from sample);
 SET @max_rain_6m = (select max(rain_6m) from sample);
 INSERT INTO sample_n (
     SELECT date
+        , fire_surface
         , cast((month-1)/11 as decimal(6,5)) as month_n
         , cast((day-1)/30 as decimal(6,5)) as day_n
         , cast(weekday/6 as decimal(6,5)) as weekday_n
