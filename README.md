@@ -130,6 +130,11 @@ Pour initialiser un réseau de neurones :
 
 Les jeux de données présents dans les sources possèdent 19 valeurs d'entrée.
 
-Pour entraîner le réseau de neurones, utiliser :
+Pour entraîner le réseau de neurones sur les données 2010 à 2017 (`resources/train.csv`) :
 
     php train.php help
+
+Pour tester le réseau de neurones sur les données 2018 (`resources/test.csv`) :
+    
+    php test.php
+

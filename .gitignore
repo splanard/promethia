@@ -1,3 +1,4 @@
-/nbproject/
-/resources/raw_data/meteo/synop.*.csv*
+nbproject/
+resources/raw_data/meteo/synop.*.csv*
 sandbox.php
+.work/
