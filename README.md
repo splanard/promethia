@@ -107,7 +107,27 @@ Le 21 juin, la première version du jeu de données normalisé est prête : je l
 
 ### Implémentation et résultats
 
-To Continue...
+La première tâche est d'adapter mon premier réseau de neurones à ce jeu de données. C'est assez rapide.
+
+J'ajoute rapidement un système pour exporter la configuration du réseau dans un fichier et le ré-importer, pour être en mesure de l'entraîner de jour en jour.
+
+Je remarque que, parfois, lorsque la valeur du taux d'apprentissage est trop élevée, la perte se met à osciller lors de l'entraînement. 
+Alors que mon but est qu'elle baisse en continu. J'ajoute donc un mode d'entraînement automatique qui divise le taux d'entraînement par deux à chaque fois que la perte oscile trop.
+
+Malgré tout, les tests avec des données 2018 restent peu concluants.
+Sur le plus gros incendie de 2018, j'obtiens un pourcentage de 81.7%, ce qui n'est pas fantastique.
+
+Je me rends également compte qu'en utilisant la fonction de perte MSE classique, les faux positifs (lorsque l'IA prédit un incendie alors qu'il n'y en a pas eu), ont le même impact sur la perte que les faux négatifs (lorsque l'IA ne prédit pas d'incendie alors qu'il y en a eu un).
+Or, dans ce cas d'application, un résultat à 50% sur un jour sans incendie devrait être moins impactant qu'un résultat à 80% un jour où il y a effectivement eu un incendie. J'essaie de faire évaluer un risque : il est normal que, certains jours, le risque ne soit pas nul mais qu'il n'y a pour autant pas eu d'incendie.
+J'essaie donc à plusieurs reprises d'adapter ma fonction de perte. Avec plus ou moins de succès. La version qui semble le mieux fonctionner pour le moment est la suivante :
+
+    SOMME( (1 + 3*y_true) * (y_true - y_pred)² )
+
+De cette façon, les éléments du jeu de données pour lesquels il y a eu un incendie (`y_true` vaut 1) ont 4 fois plus d'impact sur la perte que ceux où il n'y a pas eu d'incendie (`y_true` vaut 0). Cette fonction reste très imparfaite, mais je manque de connaissance en la matière pour l'améliorer.
+
+À la base, j'avais utilisé une librairie PHP qui proposait une fonction de génération de nombres aléatoires suivant une distribution normale pour initialiser la valeur des _weights_ et _bias_ de chaque neurone, comme préconisé dans la littérature sur le sujet. Je me suis rapidement aperçu que cette librairie ne fonctionnait pas. Je l'ai remplacé par la fonction PHP `mt_rand`, beaucoup plus classique.
+
+Je finis par trouver (merci Stackoverflow) une fonction alternative qui permettait de simuler une loi normale. Après avoir lancé la génération de 100000 nombres et vérifié que leur distribution formait bien une gaussienne, je remplace l'utilisation de `mt_rand` par cette nouvelle fonction.
 
 
 ## Fonctionnement

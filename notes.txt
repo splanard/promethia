@@ -46,7 +46,7 @@ Comprendre les réseaux de neurones en en développant 1 "from scratch" en PHP.
                 => export conf[4]
 11/07   Function de substitution pour générer une valeur aléatoire selon une distribution normale
             - 11:25:27 - HL(19), sigmoid, mse_loss_alt(3), LR: auto (0.5) => 13:46:49 - 6650e, IL: 0.4339, FL: 0.3491, FLR: 0.03125
-        Crétion des commandes init.php et train.php pour manipuler le réseau de neurones via CLI
+        Création des commandes init.php et train.php pour manipuler le réseau de neurones via CLI
         Utilisation de feedForwardAll pour calculer et afficher la perte au lieu de se baser sur les données biaisées de feedAndBack
 12/07   Modification de la fonction de perte alternative pour diminuer l'impact des faux positifs au lieu d'augmenter celui des faux négatifs
         

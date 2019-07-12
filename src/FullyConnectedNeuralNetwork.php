@@ -201,22 +201,6 @@ class FullyConnectedNeuralNetwork {
 	}
 	
 	/**
-	 * Test the network with a test dataset.
-	 * 
-	 * @param array $data The test dataset.
-	 * @param array $y_trues The correct outputs for the test dataset.
-	 * @return number The loss.
-	 */
-	public function test( array $data, array $y_trues ){
-		if( count($data) != count($y_trues) ){
-			exit("invalid test data provided");
-		}
-		$y_preds = $this->feedforwardAll( $data );
-		
-		echo "loss on test dataset: " . $this->loss($y_trues, $y_preds).PHP_EOL;
-	}
-	
-	/**
 	 * Export network configuration.
 	 * @return string serialized configuration.
 	 */

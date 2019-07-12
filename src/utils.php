@@ -36,12 +36,10 @@ function mse_loss_deriv_one( $y_true, $y_pred ){
 }
 
 function mse_loss_alt( array $y_trues, array $y_preds ){
-	//return mean(array_map(function($a, $b){ return (1 + 9*$a) * pow($a - $b, 2); }, $y_trues, $y_preds ));
-	return mean(array_map(function($a, $b){ return pow($a - $b, 2) / (10 - 9*$a); }, $y_trues, $y_preds ));
+	return mean(array_map(function($yt, $yp){ return (1 + 3*$yt) * pow($yt - $yp, 2); }, $y_trues, $y_preds ));
 }
 function mse_loss_alt_deriv_one( $y_true, $y_pred ){
-	//return (1 + 9*$y_true) * -2 * ($y_true - $y_pred);
-	return -2 * ($y_true - $y_pred) / (10 - 9*$y_true);
+	return (1 + 3*$y_true) * -2 * ($y_true - $y_pred);
 }
 
 function normalize_minmax( array $input, $newmin = 0, $newmax = 1 ){
